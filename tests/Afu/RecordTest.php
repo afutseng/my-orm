@@ -1,6 +1,6 @@
 <?php
 
-namespace Jace;
+namespace Afu;
 
 class User extends Record
 {
@@ -17,9 +17,10 @@ class RecordTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $dsn = 'mysql:dbname=test;host=127.0.0.1';
-        $username = 'username';
-        $password = 'password';
+        $dsn = 'sqlite:' . DB_PATH . '/my.db.sqlite';
+        echo 'dsn = ' . $dsn . PHP_EOL;
+        $dbh = new \PDO($dsn);
+        $dbh->query('CREATE TABLE "users" ("id" INTEGER PRIMARY KEY NOT NULL UNIQUE, "name" VARCHAR, "birthday" VARCHAR)');
 
         $user = new User($dsn, $username, $password);
         $user->truncate();
@@ -27,16 +28,17 @@ class RecordTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
+        $dsn = 'sqlite:' . DB_PATH . 'my.db.sqlite';
+        $dbh = new \PDO($dsn);
+        //$dbh->query('DROP TABLE "users"');
     }
 
     public function testIdShouldBeOneAfterSave()
     {
-        $dsn = 'mysql:dbname=test;host=127.0.0.1';
-        $username = 'username';
-        $password = 'password';
+        $dsn = 'sqlite:' . DB_PATH . '/my.db.sqlite';
 
         $user = new User($dsn, $username, $password);
-        $user->name = 'jaceju';
+        $user->name = 'afu';
         $user->birthday = '1970-05-01';
         $user->save();
         $this->assertEquals(1, $user->id);
@@ -47,17 +49,15 @@ class RecordTest extends \PHPUnit_Framework_TestCase
      */
     public function testItShouldBeSameNameAfterFind()
     {
-        $dsn = 'mysql:dbname=test;host=127.0.0.1';
-        $username = 'username';
-        $password = 'password';
+        $dsn = 'sqlite:' . DB_PATH . '/my.db.sqlite';
 
         $user = new User($dsn, $username, $password);
-        $user->name = 'jaceju';
+        $user->name = 'afu';
         $user->birthday = '1970-05-01';
         $user->save();
 
         $user = (new User($dsn, $username, $password))->find(1);
-        $this->assertEquals('jaceju', $user->name);
+        $this->assertEquals('afu', $user->name);
     }
 
     /**
@@ -65,21 +65,19 @@ class RecordTest extends \PHPUnit_Framework_TestCase
      */
     public function testItShouldBeOtherNameAfterSave()
     {
-        $dsn = 'mysql:dbname=test;host=127.0.0.1';
-        $username = 'username';
-        $password = 'password';
+        $dsn = 'sqlite:' . DB_PATH . '/my.db.sqlite';
 
         $user = new User($dsn, $username, $password);
-        $user->name = 'jaceju';
+        $user->name = 'afu';
         $user->birthday = '1970-05-01';
         $user->save();
 
         $user = (new User($dsn, $username, $password))->find(1);
-        $this->assertEquals('jaceju', $user->name);
+        $this->assertEquals('afu', $user->name);
 
-        $user->name = 'rickysu';
+        $user->name = 'afuuu';
         $user->save();
-        $this->assertEquals('rickysu', $user->name);
+        $this->assertEquals('afuuu', $user->name);
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jace;
+namespace Afu;
 
 abstract class Record
 {
